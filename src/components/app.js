@@ -6,11 +6,11 @@ import youtube from '../apis/youtube';
 const KEY = 'AIzaSyDNwVYR39VhH_Azb706OHj7OhniTSOBQDY';
 
 class App extends React.Component {
-  state = { videos: [] };
+  state = { videos: [], selectedVideo: null };
 
   onTermSubmit = async term => {
     const response = await youtube.get('/search', {
-      params:{
+      params: {
         q: term,
         part: 'snippet',
         type: 'video',
@@ -19,14 +19,19 @@ class App extends React.Component {
       }
     });
 
-  this.setState({ videos: response.data.items }); 
-};
+    this.setState({ videos: response.data.items });
+  };
+
+  onVideoSelect = video => {
+    this.setState({selectedVideo: video});
+  }
+
 
   render() {
     return (
       <div className="ui container">
-        <SearchBar onFormSubmit={this.onTermSubmit}/>
-        <VideoList videos={this.state.videos}/>
+        <SearchBar onFormSubmit={this.onTermSubmit} />
+        <VideoList videos={this.state.videos} onVideoSelect={this.onVideoSelect} />
       </div>
     )
   };
